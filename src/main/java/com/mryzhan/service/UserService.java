@@ -2,10 +2,12 @@ package com.mryzhan.service;
 
 
 import com.mryzhan.dto.UserDTO;
+import org.springframework.stereotype.Service;
 
 
 import java.util.List;
 
+@Service
 public interface UserService{
 
     List<UserDTO> listAllUsers();

@@ -4,9 +4,11 @@ import com.mryzhan.dto.ProjectDTO;
 import com.mryzhan.dto.TaskDTO;
 import com.mryzhan.entity.User;
 import com.mryzhan.enums.Status;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface TaskService {
 
     TaskDTO findById(Long id);
