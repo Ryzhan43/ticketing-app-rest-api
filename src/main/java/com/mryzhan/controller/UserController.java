@@ -37,4 +37,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseWrapper("User is successfully created",HttpStatus.CREATED));
     }
 
+    @PutMapping
+    public ResponseEntity<ResponseWrapper> updateUser(@RequestBody UserDTO user){
+        userService.update(user);
+        return ResponseEntity.ok(new ResponseWrapper("User is successfully updated", user, HttpStatus.OK));
+    }
+
+    @DeleteMapping("/{userName}")
+    public ResponseEntity<ResponseWrapper> deleteUser(@PathVariable("userName") String user){
+        userService.deleteByUserName(user);
+//        return ResponseEntity.ok(new ResponseWrapper("User is successfully deleted", HttpStatus.OK));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResponseWrapper("User is successfully deleted", HttpStatus.OK));
+    }
 }
