@@ -1,4 +1,4 @@
-package com.mryzhan;
+package com.mryzhan.controller;
 
         import com.mryzhan.dto.ProjectDTO;
         import com.mryzhan.dto.TaskDTO;
