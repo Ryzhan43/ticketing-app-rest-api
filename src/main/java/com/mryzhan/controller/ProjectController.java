@@ -1,11 +1,9 @@
 package com.mryzhan.controller;
 
 import com.mryzhan.dto.ProjectDTO;
-import com.mryzhan.dto.UserDTO;
-import com.mryzhan.entity.Project;
 import com.mryzhan.entity.ResponseWrapper;
 import com.mryzhan.service.ProjectService;
-import com.mryzhan.service.UserService;
+import com.mryzhan.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,18 +16,16 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final UserService userService;
 
-
-    public ProjectController(ProjectController projectController, ProjectService projectService, UserService userService) {
+    public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
-        this.userService = userService;
     }
+
 
     @GetMapping
     public ResponseEntity<ResponseWrapper> listAllProject() {
         List<ProjectDTO> projects = projectService.listAllProjects();
-        return ResponseEntity.ok(new ResponseWrapper("All users were retrieved", projects, HttpStatus.OK));
+        return ResponseEntity.ok(new ResponseWrapper("All users were successfully retrieved", projects, HttpStatus.OK));
     }
 
     @GetMapping("/{projectCode}")
@@ -52,11 +48,22 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{projectCode}")
-    public ResponseEntity<ResponseWrapper> deleteUser(@PathVariable("projectCode") String user){
-        userService.deleteByUserName(user);
+    public ResponseEntity<ResponseWrapper> deleteUser(@PathVariable("projectCode") String projectCode){
+        projectService.delete(projectCode);
 //        return ResponseEntity.ok(new ResponseWrapper("User is successfully deleted", HttpStatus.OK));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResponseWrapper("User is successfully deleted", HttpStatus.OK));
     }
 
+    @GetMapping("/manager/project-status")
+    public ResponseEntity<ResponseWrapper> managerCompleteProject(){
+        List<ProjectDTO> projects = projectService.listAllProjectDetails();
+        return ResponseEntity.ok(new ResponseWrapper("Projects are successfully retrieved", projects, HttpStatus.OK));
+    }
+
+    @PutMapping("/manager/complete/{projectCode}")
+    public ResponseEntity<ResponseWrapper> managerCompleteProject(@PathVariable("projectCode") String code){
+        projectService.complete(code);
+        return ResponseEntity.ok(new ResponseWrapper("Project is successfully completed",HttpStatus.OK));
+    }
 
 }
