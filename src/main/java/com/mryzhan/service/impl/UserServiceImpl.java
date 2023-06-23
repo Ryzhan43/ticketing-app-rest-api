@@ -3,18 +3,16 @@ package com.mryzhan.service.impl;
 import com.mryzhan.dto.ProjectDTO;
 import com.mryzhan.dto.TaskDTO;
 import com.mryzhan.dto.UserDTO;
-import com.mryzhan.entity.Project;
-import com.mryzhan.entity.Task;
 import com.mryzhan.entity.User;
 import com.mryzhan.mapper.UserMapper;
 import com.mryzhan.repository.UserRepository;
+import com.mryzhan.service.KeycloakService;
 import com.mryzhan.service.ProjectService;
 import com.mryzhan.service.TaskService;
 import com.mryzhan.service.UserService;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,12 +24,16 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final ProjectService projectService;
     private final TaskService taskService;
+    private final KeycloakService keycloakService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, ProjectService projectService, TaskService taskService) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, ProjectService projectService, TaskService taskService, KeycloakService keycloakService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.projectService = projectService;
         this.taskService = taskService;
+        this.keycloakService = keycloakService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -53,9 +55,14 @@ public class UserServiceImpl implements UserService {
 
         dto.setEnabled(true);
 
+        String encodedPassword = passwordEncoder.encode(dto.getPassWord());
+
         User obj = userMapper.convertToEntity(dto);
+        obj.setPassWord(encodedPassword);
 
         userRepository.save(obj);
+
+        keycloakService.userCreate(dto);
 
     }
 
@@ -114,4 +121,5 @@ public class UserServiceImpl implements UserService {
 
         return users.stream().map(userMapper::convertToDTO).collect(Collectors.toList());
     }
+
 }

@@ -24,7 +24,7 @@ public class ProjectController {
 
 
     @GetMapping
-    @RolesAllowed({"Admin", "Manager"})
+//    @RolesAllowed({"Admin", "Manager"})
     public ResponseEntity<ResponseWrapper> listAllProject() {
         List<ProjectDTO> projects = projectService.listAllProjects();
         return ResponseEntity.ok(new ResponseWrapper("All users were successfully retrieved", projects, HttpStatus.OK));
