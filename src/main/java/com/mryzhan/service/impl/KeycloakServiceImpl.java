@@ -88,4 +88,5 @@ public class KeycloakServiceImpl implements KeycloakService {
                 keycloakProperties.getMasterRealm(), keycloakProperties.getMasterUser()
                 , keycloakProperties.getMasterUserPswd(), keycloakProperties.getMasterClient());
     }
+
 }
