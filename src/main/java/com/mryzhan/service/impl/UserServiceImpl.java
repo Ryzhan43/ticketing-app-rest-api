@@ -4,6 +4,7 @@ import com.mryzhan.dto.ProjectDTO;
 import com.mryzhan.dto.TaskDTO;
 import com.mryzhan.dto.UserDTO;
 import com.mryzhan.entity.User;
+import com.mryzhan.exception.TicketingProjectException;
 import com.mryzhan.mapper.UserMapper;
 import com.mryzhan.repository.UserRepository;
 import com.mryzhan.service.KeycloakService;
@@ -58,7 +59,7 @@ public class UserServiceImpl implements UserService {
         String encodedPassword = passwordEncoder.encode(dto.getPassWord());
 
         User obj = userMapper.convertToEntity(dto);
-        obj.setPassWord(encodedPassword);
+        obj.setPassWord(dto.getPassWord());
 
         userRepository.save(obj);
 
@@ -88,18 +89,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(String username) {
+    public void delete(String username) throws TicketingProjectException {
         User user = userRepository.findByUserName(username);
 
         if (checkIfUserCanBeDeleted(user)) {
             user.setIsDeleted(true);
             user.setUserName(user.getUserName() + "-" + user.getId());
             userRepository.save(user);
+        } else {
+            throw new TicketingProjectException("User can not be deleted");
         }
 
     }
 
-    private boolean checkIfUserCanBeDeleted(User user) {
+    private boolean checkIfUserCanBeDeleted(User user) throws TicketingProjectException {
+
+        if (user==null){
+            throw new TicketingProjectException("User not found");
+        }
 
         switch (user.getRole().getDescription()) {
             case "Manager":

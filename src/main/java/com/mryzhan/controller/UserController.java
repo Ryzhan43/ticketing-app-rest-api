@@ -1,5 +1,6 @@
 package com.mryzhan.controller;
 
+import com.mryzhan.annotation.DefaultExceptionMessage;
 import com.mryzhan.dto.UserDTO;
 import com.mryzhan.entity.ResponseWrapper;
 import com.mryzhan.service.UserService;
@@ -60,6 +61,7 @@ public class UserController {
     @DeleteMapping("/{userName}")
     @RolesAllowed("Admin")
     @Operation(summary = "Delete User")
+    @DefaultExceptionMessage(defaultMessage = "Failed to delete user")
     public ResponseEntity<ResponseWrapper> deleteUser(@PathVariable("userName") String user){
         userService.deleteByUserName(user);
 //        return ResponseEntity.ok(new ResponseWrapper("User is successfully deleted", HttpStatus.OK));
