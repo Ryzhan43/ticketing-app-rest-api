@@ -1,6 +1,7 @@
 package com.mryzhan.controller;
 
 import com.mryzhan.annotation.DefaultExceptionMessage;
+import com.mryzhan.annotation.ExecutionTime;
 import com.mryzhan.dto.UserDTO;
 import com.mryzhan.entity.ResponseWrapper;
 import com.mryzhan.service.UserService;
@@ -28,7 +29,7 @@ public class UserController {
     @GetMapping
     @RolesAllowed("Admin")
     @Operation(summary = "Get Users")
-
+    @ExecutionTime
     public ResponseEntity<ResponseWrapper> getUsers(){
         List<UserDTO> userDTOList = userService.listAllUsers();
         return ResponseEntity.ok(new ResponseWrapper("Users are successfully retrieved",userDTOList, HttpStatus.OK));
