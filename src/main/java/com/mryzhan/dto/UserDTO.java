@@ -2,13 +2,13 @@ package com.mryzhan.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mryzhan.enums.Gender;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class UserDTO {
 
     private Long id;

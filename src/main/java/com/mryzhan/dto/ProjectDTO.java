@@ -2,14 +2,15 @@ package com.mryzhan.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mryzhan.enums.Status;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
 import java.time.LocalDate;
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class ProjectDTO {
 
     private Long id;
