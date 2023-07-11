@@ -1,5 +1,8 @@
 package com.mryzhan.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mryzhan.dto.ProjectDTO;
 import com.mryzhan.dto.RoleDTO;
 import com.mryzhan.dto.UserDTO;
@@ -14,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.parameters.P;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
 
@@ -71,7 +75,34 @@ class ProjectControllerTest {
         mvc.perform(MockMvcRequestBuilders
                 .get("/api/v1/project")
                         .header("Authorization", token)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].projectCode").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].assignedManager.userName").isNotEmpty());
+    }
+
+
+    @Test
+    public void givenToken_createProject() throws Exception {
+
+        mvc.perform(MockMvcRequestBuilders
+                .post("/api/v1/project")
+                .header("Authorization", token)
+                .content(toJsonString(projectDTO))
+                .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
+
+    }
+
+    private static String toJsonString(final Object obj) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+            objectMapper.registerModule(new JavaTimeModule());
+            return objectMapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
